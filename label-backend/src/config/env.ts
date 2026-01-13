@@ -19,7 +19,7 @@ const envSchema = z.object({
   SENTRY_DSN: z.string().optional(),
   RELEASE_SHA: z.string().default("local"),
   // External integrations
-  GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required"),
+  GEMINI_API_KEY: z.string().optional(),
   OFF_APP_NAME: z.string().default("label-backend"),
   OFF_USER_AGENT: z.string().default("label-backend/1.0 (+https://example.com)"),
   ABHA_BASE_URL: z.string().optional(),

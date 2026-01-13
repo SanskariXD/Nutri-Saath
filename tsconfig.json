@@ -1,16 +1,46 @@
 {
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@config/*": [
+        "label-backend/src/config/*"
+      ],
+      "@controllers/*": [
+        "label-backend/src/controllers/*"
+      ],
+      "@services/*": [
+        "label-backend/src/services/*"
+      ],
+      "@routes/*": [
+        "label-backend/src/routes/*"
+      ],
+      "@models/*": [
+        "label-backend/src/models/*"
+      ],
+      "@middleware/*": [
+        "label-backend/src/middleware/*"
+      ],
+      "@utils/*": [
+        "label-backend/src/utils/*"
+      ],
+      "@shared/*": [
+        "label-backend/src/shared/*"
+      ]
     },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
-  }
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src",
+    "api",
+    "label-backend/src"
+  ]
 }

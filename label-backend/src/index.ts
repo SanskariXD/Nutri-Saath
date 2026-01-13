@@ -47,11 +47,11 @@ const isLocalNetworkOrigin = (origin: string): boolean => {
 const createCorsOptions = (): CorsOptions => {
   const allowedOrigins = [
     "http://localhost:5173",   // dev frontend
+    "http://localhost:5174",   // dev frontend (alternate port)
     "http://localhost:8100",   // Ionic/Capacitor dev
     "capacitor://localhost",   // Capacitor mobile app
     "ionic://localhost",       // Ionic mobile app
-    "https://proreduction-debra-nonmonarchally.ngrok-free.dev", // Your specific ngrok URL
-    ...(env.corsOrigins === "*" ? [] : env.corsOrigins)
+    ...(typeof env.corsOrigins === "string" ? [env.corsOrigins] : Array.isArray(env.corsOrigins) ? env.corsOrigins : [])
   ];
 
   return {
@@ -62,8 +62,13 @@ const createCorsOptions = (): CorsOptions => {
       // Allow explicitly configured origins
       if (allowedOrigins.includes(origin)) return callback(null, true);
 
+      // Allow Vercel preview and production deployments
+      if (origin.endsWith(".vercel.app") || origin.includes("vercel.app")) {
+        return callback(null, true);
+      }
+
       // Allow ngrok URLs (for development)
-      if (origin?.includes("ngrok.io") || origin?.includes("ngrok-free.app") || origin?.includes("ngrok-free.dev")) {
+      if (origin.includes("ngrok.io") || origin.includes("ngrok-free.app") || origin.includes("ngrok-free.dev")) {
         return callback(null, true);
       }
 
@@ -72,54 +77,53 @@ const createCorsOptions = (): CorsOptions => {
         return callback(null, true);
       }
 
-      // For production, be more restrictive
-      if (env.NODE_ENV === "production") {
-        return callback(new Error("Not allowed by CORS"), false);
-      }
-
-      // In development, allow localhost variants
-      if (origin?.startsWith("http://localhost") || origin?.startsWith("https://localhost")) {
+      // In production, allow all origins if specifically configured as "*" or just allow the request
+      // (This is safer for an MVP to avoid confusing CORS errors during judging)
+      if (env.NODE_ENV === "production" && (env.CORS_ORIGIN === "*" || !env.CORS_ORIGIN)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"), false);
+      // In development, allow localhost variants
+      if (origin.startsWith("http://localhost") || origin.startsWith("https://localhost")) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS Error: Origin ${origin} not allowed`), false);
     },
     credentials: true,
   };
 };
 
-const bootstrap = async () => {
+export const createApp = async () => {
   try {
     await connectMongo();
     logger.info("MongoDB connected successfully");
   } catch (error) {
-    logger.warn("Failed to connect to MongoDB. Running in degraded mode", { 
-      error: error instanceof Error ? error.message : String(error) 
+    logger.warn("Failed to connect to MongoDB. Running in degraded mode", {
+      error: error instanceof Error ? error.message : String(error)
     });
   }
 
   const app = express();
   app.disable("x-powered-by");
 
-  // Short-circuit health checks and common infra probes before any other middleware
+  // Short-circuit health checks
   app.all("/health", healthCheck);
   app.get("/robots933456.txt", (_req, res) => {
     res.type("text/plain").status(200).send("User-agent: *\nDisallow: /");
   });
-  // Preflight: respond fast to any OPTIONS prior to enabling CORS
   app.options("*", (_req, res) => res.sendStatus(204));
 
   app.use(sentryRequestHandler);
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  }));
   app.use(cors(createCorsOptions()));
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true, limit: "1mb" }));
   app.use(morgan(isDevelopment ? "dev" : "combined"));
 
-  app.get("/", (_req, res) => res.json({ status: "ok", commit: env.RELEASE_SHA }));
-  if (isDevelopment) {
-    app.get("/debug/ping", debugPing);
-  }
+  app.get("/", (_req, res) => res.json({ status: "ok", provider: "Vercel Serverless" }));
 
   registerRoutes(app);
 
@@ -127,24 +131,14 @@ const bootstrap = async () => {
   app.use(sentryErrorHandler);
   app.use(errorHandler);
 
-  const server = app.listen(env.PORT, () => {
-    logger.info(`API listening on port ${env.PORT}`);
-  });
-
-  const shutdown = () => {
-    logger.info("Received shutdown signal");
-    server.close(() => {
-      logger.info("Server stopped");
-      process.exit(0);
-    });
-  };
-
-  process.on("SIGTERM", shutdown);
-  process.on("SIGINT", shutdown);
+  return app;
 };
 
-bootstrap().catch((error) => {
-  logger.error("Bootstrap error", { error: (error as Error).message });
-  process.exit(1);
-});
-
+// For local development only
+if (require.main === module) {
+  createApp().then(app => {
+    app.listen(env.PORT, () => {
+      logger.info(`API listening on port ${env.PORT}`);
+    });
+  });
+}

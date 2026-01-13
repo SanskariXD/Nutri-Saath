@@ -21,26 +21,29 @@ const isLocalNetwork = (hostname: string): boolean => {
 
 const resolveApiBaseUrl = (): string => {
   const metaEnv = (import.meta as any)?.env;
+
+  // 1. Check for manual override via environment variable (BEST for Vercel)
   if (metaEnv?.VITE_API_URL) {
     return metaEnv.VITE_API_URL;
   }
 
+  // 2. Check for runtime override
   if (typeof window !== 'undefined' && typeof (window as any).__LABEL_API_URL__ === 'string') {
     return (window as any).__LABEL_API_URL__ as string;
   }
 
-  // Check if running on local network (localhost or local IPs)
+  // 3. Detect Development Environment
   const isLocal = typeof window !== 'undefined' && isLocalNetwork(window.location.hostname);
   const isDevelopment = metaEnv?.MODE === 'development' || metaEnv?.DEV === true || isLocal;
 
-  if (isDevelopment || isLocal) {
-    console.log('🔧 [API CONFIG] Development/local network mode detected');
-    console.log('🔧 [API CONFIG] Using localhost proxy for development (localhost:8080)');
-    return '/api'; // This will be proxied by Vite to localhost:8080
+  if (isDevelopment) {
+    // In local dev, we typically use the Vite proxy defined in vite.config.ts
+    return '/api';
   }
 
-  // Default to HTTPS ngrok URL for production/mobile
-  return 'https://proreduction-debra-nonmonarchally.ngrok-free.dev';
+  // 4. Production Fallback
+  // Since we are deploying both to Vercel, we can use the relative path
+  return '/api';
 };
 
 export const API_BASE_URL = resolveApiBaseUrl();
