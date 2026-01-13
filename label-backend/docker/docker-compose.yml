@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - API_BASE_URL=http://localhost:8080
+      - FRONTEND_ORIGIN=http://localhost:5173
+      - JWT_SECRET=dev_change_me
+      - RATE_LIMIT_WINDOW_MS=60000
+      - RATE_LIMIT_MAX=60
+      - FEATURE_OFF_CONNECTOR=true
+      - FEATURE_OCR_LABEL=true
+      - FEATURE_OCR_BILL=true
+      - FEATURE_DB_SUPABASE=false
+      - OFF_BASE_URL=https://world.openfoodfacts.org
+      - UPLOAD_DIR=/data/uploads
+      - REDIS_URL=redis://redis:6379
+      - ABHA_MOCK_ENABLED=true
+      - ABHA_CONSENT_REDIRECT_URL=https://sandbox.abdm.gov.in/mock-consent
+      - SEARCH_STRATEGY=inmemory
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  uploads:
+  redis_data:

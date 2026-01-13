@@ -1,0 +1,328 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Label Padega Design System - Material 3 Inspired Health App
+All colors MUST be HSL. Focus on health, safety, and Indian cultural context.
+*/
+
+/* Scanner styles */
+.scanner-active {
+  background: transparent !important;
+}
+
+.scanner-active > *:not(.scan-region) {
+  display: none !important;
+}
+
+@layer base {
+  :root {
+    /* Base colors - Clean, medical-grade whites and grays */
+    --background: 0 0% 98%;
+    --foreground: 220 15% 15%;
+
+    /* Card system - Elevated surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    /* Interactive surfaces */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    /* Primary - Emerald green for health and safety */
+    --primary: 158 64% 52%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 158 64% 62%;
+    --primary-dark: 158 64% 42%;
+
+    /* Secondary - Saffron orange for Indian cultural context */
+    --secondary: 28 100% 58%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 28 100% 68%;
+
+    /* Success system - Health positive */
+    --success: 140 67% 58%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 140 67% 68%;
+
+    /* Warning - Moderate health concern */
+    --warning: 45 100% 58%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 45 100% 68%;
+
+    /* Destructive - Health negative */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 84% 70%;
+
+    /* Surface variants */
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 13% 45%;
+    --accent: 158 32% 95%;
+    --accent-foreground: 158 64% 42%;
+
+    /* Borders and inputs */
+    --border: 220 13% 88%;
+    --input: 220 13% 91%;
+    --ring: 158 64% 52%;
+
+    /* Design tokens */
+    --radius: 1.5rem;
+    --radius-sm: 0.75rem;
+    --radius-lg: 2rem;
+
+    /* Gradients for health scoring */
+    --gradient-success: linear-gradient(135deg, hsl(140 67% 58%), hsl(158 64% 52%));
+    --gradient-warning: linear-gradient(135deg, hsl(45 100% 58%), hsl(35 100% 55%));
+    --gradient-error: linear-gradient(135deg, hsl(0 84% 60%), hsl(15 85% 58%));
+    --gradient-primary: linear-gradient(135deg, hsl(158 64% 52%), hsl(158 64% 42%));
+    --gradient-hero: linear-gradient(135deg, hsl(158 64% 52%), hsl(28 100% 58%));
+
+    /* Shadows - Material 3 inspired */
+    --shadow-sm: 0 1px 2px 0 hsl(220 15% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 15% 15% / 0.1), 0 2px 4px -1px hsl(220 15% 15% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(220 15% 15% / 0.1), 0 4px 6px -2px hsl(220 15% 15% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 15% 15% / 0.1), 0 10px 10px -5px hsl(220 15% 15% / 0.04);
+    --shadow-glow: 0 0 20px hsl(158 64% 52% / 0.3);
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Health app with reduced eye strain */
+    --background: 220 15% 8%;
+    --foreground: 220 10% 95%;
+
+    --card: 220 15% 10%;
+    --card-foreground: 220 10% 95%;
+
+    --popover: 220 15% 10%;
+    --popover-foreground: 220 10% 95%;
+
+    /* Primary stays health-focused in dark mode */
+    --primary: 158 64% 58%;
+    --primary-foreground: 220 15% 8%;
+    --primary-light: 158 64% 68%;
+    --primary-dark: 158 64% 48%;
+
+    /* Secondary saffron adjusted for dark mode */
+    --secondary: 28 100% 65%;
+    --secondary-foreground: 220 15% 8%;
+    --secondary-light: 28 100% 75%;
+
+    /* Adjusted success/warning/error for dark mode */
+    --success: 140 67% 65%;
+    --success-foreground: 220 15% 8%;
+    --success-light: 140 67% 75%;
+
+    --warning: 45 100% 65%;
+    --warning-foreground: 220 15% 8%;
+    --warning-light: 45 100% 75%;
+
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 220 15% 8%;
+    --destructive-light: 0 84% 80%;
+
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 158 32% 15%;
+    --accent-foreground: 158 64% 65%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 18%;
+    --ring: 158 64% 58%;
+
+    /* Dark mode gradients */
+    --gradient-success: linear-gradient(135deg, hsl(140 67% 65%), hsl(158 64% 58%));
+    --gradient-warning: linear-gradient(135deg, hsl(45 100% 65%), hsl(35 100% 62%));
+    --gradient-error: linear-gradient(135deg, hsl(0 84% 70%), hsl(15 85% 68%));
+    --gradient-primary: linear-gradient(135deg, hsl(158 64% 58%), hsl(158 64% 48%));
+    --gradient-hero: linear-gradient(135deg, hsl(158 64% 58%), hsl(28 100% 65%));
+
+    /* Dark mode shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -1px hsl(0 0% 0% / 0.2);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -2px hsl(0 0% 0% / 0.2);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.4), 0 10px 10px -5px hsl(0 0% 0% / 0.2);
+    --shadow-glow: 0 0 20px hsl(158 64% 58% / 0.4);
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Health Score Animations */
+  .score-ring {
+    @apply transition-all duration-500 ease-out;
+    stroke-dasharray: 251.2; /* 2 * π * 40 */
+    stroke-dashoffset: 251.2;
+    transform-origin: center;
+  }
+
+  .score-ring.animate {
+    stroke-dashoffset: calc(251.2 - (251.2 * var(--score)) / 100);
+  }
+
+  /* Gradient Backgrounds */
+  .bg-gradient-success {
+    background: var(--gradient-success);
+  }
+
+  .bg-gradient-warning {
+    background: var(--gradient-warning);
+  }
+
+  .bg-gradient-error {
+    background: var(--gradient-error);
+  }
+
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  /* Material 3 Shadows */
+  .shadow-material-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-material-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-material-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-material-xl {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Interactive Elements */
+  .interactive-scale {
+    @apply transition-transform duration-200 ease-out;
+    &:hover {
+      transform: scale(1.02);
+    }
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .interactive-glow {
+    @apply transition-all duration-300 ease-out;
+    &:hover {
+      box-shadow: var(--shadow-glow);
+    }
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-material-lg interactive-scale;
+    background: var(--gradient-primary);
+  }
+
+  /* Health Grade Colors */
+  .grade-a { @apply text-success; }
+  .grade-b { @apply text-primary; }
+  .grade-c { @apply text-warning; }
+  .grade-d { @apply text-orange-500; }
+  .grade-e { @apply text-destructive; }
+
+  /* Stagger Animation for Lists */
+  .stagger-item {
+    @apply opacity-0 translate-y-4;
+    animation: staggerIn 0.4s ease-out forwards;
+  }
+
+  .stagger-item:nth-child(1) { animation-delay: 0ms; }
+  .stagger-item:nth-child(2) { animation-delay: 100ms; }
+  .stagger-item:nth-child(3) { animation-delay: 200ms; }
+  .stagger-item:nth-child(4) { animation-delay: 300ms; }
+  .stagger-item:nth-child(5) { animation-delay: 400ms; }
+}
+
+@keyframes staggerIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scanning Animation for Google Lens Style Effect */
+@keyframes scanning-dot {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(0.8);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2);
+  }
+}
