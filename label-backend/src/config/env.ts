@@ -10,17 +10,16 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("production"),
   PORT: z.coerce.number().default(8080),
   // Core infrastructure
-  MONGODB_URI: z.string().default("mongodb+srv://nutrisaath:nutrisaath@cluster0.8drpz.mongodb.net/nutrisaath?retryWrites=true&w=majority"),
+  MONGODB_URI: z.string().min(1, "MONGODB_URI is required"),
   DB_NAME: z.string().default("nutrisaath"),
   // Auth & security
-  JWT_SECRET: z.string().min(32).default("this-is-an-insecure-default-jwt-secret-change-me-please-123456"),
+  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
   GOOGLE_CLIENT_ID: z.string().optional(),
   // Observability
   SENTRY_DSN: z.string().optional(),
   RELEASE_SHA: z.string().default("local"),
   // External integrations
-  // Gemini API Key (updated default; can be overridden by real env var)
-  GEMINI_API_KEY: z.string().default("AIzaSyADkUVVKpRBGlGrypCWe7YWc-Ikt_ZGXsU"),
+  GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required"),
   OFF_APP_NAME: z.string().default("label-backend"),
   OFF_USER_AGENT: z.string().default("label-backend/1.0 (+https://example.com)"),
   ABHA_BASE_URL: z.string().optional(),
